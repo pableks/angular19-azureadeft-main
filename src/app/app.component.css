@@ -1,0 +1,94 @@
+.toolbar-spacer {
+    flex: 1 1 auto;
+}
+
+a.title {
+    color: white;
+}
+
+.drawer-container {
+  height: 100%;
+  overflow: hidden;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.drawer {
+  width: 250px;
+  transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  z-index: 2;
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background-color: #3f51b5;
+  color: white;
+  position: relative;
+  z-index: 2;
+}
+
+.title {
+  color: white;
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
+.content-header {
+  padding: 16px;
+  background-color: #3f51b5;
+  color: white;
+  position: relative;
+  z-index: 2;
+}
+
+.container {
+  padding: 20px;
+}
+
+mat-nav-list {
+  overflow: hidden;
+  position: relative;
+  contain: content;
+}
+
+mat-nav-list a {
+  transition: 
+    opacity 0.3s ease,
+    transform 0.3s ease;
+  opacity: 1;
+  transform: translateX(0);
+  height: 48px;
+  display: flex;
+  align-items: center;
+}
+
+mat-nav-list a.conditional-item {
+  opacity: 0;
+  transform: translateX(-10px);
+  position: absolute;
+  width: 100%;
+  pointer-events: none;
+}
+
+mat-nav-list a.conditional-item.visible {
+  position: relative;
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+mat-icon {
+  margin-right: 8px;
+}
+
+mat-drawer-content {
+  transition: margin-left 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
