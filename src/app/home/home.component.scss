@@ -1,0 +1,161 @@
+// Estilos generales
+.glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+}
+
+.welcome-container {
+    padding: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    background: linear-gradient(45deg, #2196F3, #3F51B5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0;
+}
+
+.vital-sign {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    color: #2196F3;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: pulse 2s infinite;
+}
+
+// Sección de características
+.header-section {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-top: 1rem;
+}
+
+.health-icon {
+    font-size: 3rem;
+    height: 3rem;
+    width: 3rem;
+    color: #2196F3;
+    margin-bottom: 1rem;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    padding-top: 1rem;
+}
+
+.feature-item {
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease;
+    border-radius: 12px;
+    background: rgba(245, 245, 245, 0.8);
+
+    &:hover {
+        transform: translateY(-5px);
+    }
+}
+
+.icon-wrapper {
+    background: linear-gradient(45deg, #2196F3, #3F51B5);
+    border-radius: 50%;
+    padding: 1rem;
+    margin: 0 auto 1rem;
+    width: fit-content;
+
+    mat-icon {
+        color: white;
+    }
+}
+
+// Animaciones
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+// Estilos para el dashboard
+.dashboard-container {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.welcome-card {
+    padding: 2rem;
+}
+
+.modern-header {
+    margin-bottom: 2rem;
+}
+
+.modern-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+    }
+}
+
+// Estilos adicionales
+.mat-icon {
+    margin-right: 8px;
+}
+
+.role-section {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+mat-card {
+    margin-top: 2rem;
+}
+
+button {
+    margin: 1rem 0;
+}
+
+.content-card {
+    padding-top: 1rem;
+} 

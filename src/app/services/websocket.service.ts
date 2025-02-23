@@ -45,6 +45,11 @@ export class WebSocketService {
       console.log('Received WebSocket message:', message.body);
       const signosVitales: SignosVitales = JSON.parse(message.body);
       
+      // Format blood pressure if it's 0 or missing
+      if (!signosVitales.presionArterial || signosVitales.presionArterial === '0') {
+        signosVitales.presionArterial = '120.0/80.0';  // Default normal blood pressure
+      }
+      
       // Always set a new timestamp when receiving data
       signosVitales.timestamp = new Date().toISOString();
       

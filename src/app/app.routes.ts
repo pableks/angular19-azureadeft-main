@@ -8,6 +8,7 @@ import { PatientDashboardComponent } from './patient/patient-dashboard.component
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { roleGuard } from './guards/role.guard';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { AlertasComponent } from './alertas/alertas.component';
 
 export const routes: Routes = [
   {
@@ -17,6 +18,11 @@ export const routes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent,
+    canActivate: [MsalGuard]
+  },
+  {
+    path: 'alertas',
+    component: AlertasComponent,
     canActivate: [MsalGuard]
   },
   {

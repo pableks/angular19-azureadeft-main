@@ -1,7 +1,8 @@
 export interface SignosVitales {
+  pacienteId: string;
   frecuenciaCardiaca: number;
-  presionArterial: number;
+  presionArterial: string;  // Should be string, not number
+  temperatura: number;
   saturacionOxigeno: number;
   timestamp: string;
-  pacienteId: string;
-} 
+}

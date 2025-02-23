@@ -1,0 +1,231 @@
+# Paso 1: Crear docker-compose.yaml
+# Tener instalado VS Studio Code
+# Tener instalado Docker Desktop
+
+version: '3'
+
+services:
+  # Zookeeper 1 (Leader)
+  zookeeper-1:
+    image: confluentinc/cp-zookeeper:latest
+    networks:
+      - kafka_network
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+    volumes:
+      - zookeeper-data-1:/var/lib/zookeeper/data
+
+  # Zookeeper 2 (Follower)
+  zookeeper-2:
+    image: confluentinc/cp-zookeeper:latest
+    networks:
+      - kafka_network
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 32182:2181
+    volumes:
+      - zookeeper-data-2:/var/lib/zookeeper/data
+
+  # Zookeeper 3 (Follower)
+  zookeeper-3:
+    image: confluentinc/cp-zookeeper:latest
+    networks:
+      - kafka_network
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 42183:2181
+    volumes:
+      - zookeeper-data-3:/var/lib/zookeeper/data
+
+  # Kafka 1
+  kafka-1:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    networks:
+      - kafka_network
+    ports:
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    
+
+  # Kafka 2
+  kafka-2:
+     image: confluentinc/cp-kafka:latest
+     depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+     networks:
+      - kafka_network
+     ports:
+      - "39092:39092"
+     environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-2:9092,PLAINTEXT_HOST://localhost:39092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  # Kafka 3
+  kafka-3:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+    networks:
+      - kafka_network
+    ports:
+      - "49092:49092"
+    environment:
+     KAFKA_BROKER_ID: 3
+     KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
+     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-3:9092,PLAINTEXT_HOST://localhost:49092
+     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+     KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  # Kafka UI
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: "docker-cluster"
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka-1:9092,kafka-2:9092,kafka-3:9092"
+    networks:
+      - kafka_network
+
+networks:
+  kafka_network:
+    driver: bridge
+
+volumes:
+  zookeeper-data-1:
+  zookeeper-data-2:
+  zookeeper-data-3:
+ 
+
+#- Paso 2: Limpiar Contenedores y Volúmenes
+# docker-compose down -v
+# docker system prune -a -f
+# Esto elimina todos los contenedores y volúmenes asociados, asegurando que la nueva configuración se aplique correctamente.
+
+#- Paso 3: Reiniciar el Cluster
+# docker-compose up -d
+# Esto descargará e iniciará los contenedores de Zookeeper, Kafka y Kafka UI.
+# docker ps -a
+# Si ves zookeeper-1, zookeeper-2, zookeeper-3, kafka-1, kafka-2, kafka-3 y kafka-ui en la lista, todo está funcionando.
+
+#- Paso 4: Ver Logs de Zookeeper y kafka
+# docker logs zookeeper-1
+# docker logs kafka-1
+# Esto permite ver los logs de kafka y zookeeper para revisar errores
+
+#- Paso 5: Acceder a la Interfaz Gráfica (Kafka UI)
+# http://localhost:8080
+# Desde aquí puedes administrar los topics de Kafka de forma visual.
+
+######################### PROBAR KAFKA DESDE FUERA DEL CONTENEDOR ###############################################
+
+#- Paso 6: Probar Kafka desde la Terminal de VS Code
+
+#docker exec -it kafka-1 kafka-topics --create --topic mi-topic --bootstrap-server localhost:9092 --partitions 3 --replication-factor 3
+# Crear un topic con 3 particiones y replicación en los 3 nodos
+
+#docker exec -it kafka-1 kafka-topics --list --bootstrap-server localhost:9092
+# Listar los topics creados
+
+#docker exec -it kafka-1 kafka-console-producer --broker-list localhost:9092 --topic mi-topic
+# Enviar un mensaje al topic (Productor)
+
+#docker exec -it kafka-2 kafka-console-consumer --bootstrap-server localhost:9093 --topic mi-topic --from-beginning
+# Leer mensajes del topic (Consumidor)
+
+#- Paso 7: Apagar el Cluster
+#docker-compose down
+# Cuando termines de usar Kafka, puedes detener los contenedores
+
+######################### PROBAR KAFKA DESDE ADENTRO DEL CONTEDOR ################################################
+
+#1 Conéctate a un contenedor de Kafka
+# Para ejecutar comandos de Kafka, primero ingresa a uno de los brokers de Kafka. Por ejemplo, accede a kafka-1:
+#docker exec -it kafka-1 bash
+# Dentro del contenedor, ve a la carpeta donde están los scripts de Kafka:
+#cd /usr/bin
+
+#2 Crea un tópico en Kafka
+# Ejecuta el siguiente comando para crear un nuevo tópico llamado "test-topic":
+#kafka-topics --create --topic test-topic --bootstrap-server kafka-1:9092 --partitions 3 --replication-factor 3
+#Esto hace que: ✅ Kafka cree 3 particiones del tópico.
+#✅ Cada partición tenga copias en los 3 brokers.
+#✅ Un broker actúe como líder para cada partición.
+# Para verificar que el tópico está replicado, usa:
+#kafka-topics --describe --topic test-topic --bootstrap-server kafka-1:9092
+#     Leader: Es el broker que maneja las escrituras en la partición.
+#     Replicas: Son los brokers que tienen copias del dato.
+#     Isr (In-Sync Replicas): Brokers que están sincronizados con el líder.
+# Para verificar que el tópico fue creado correctamente, usa:
+#kafka-topics --list --bootstrap-server kafka-1:9092
+# Debe aparecer en la lista:
+#test-topic
+
+#3 Enviar mensajes con un Producer
+# Para enviar mensajes al tópico test-topic, ejecuta:
+#kafka-console-producer --topic test-topic --bootstrap-server kafka-1:9092
+# Se abrirá una línea donde puedes escribir mensajes. Por ejemplo, escribe:
+#Hola Kafka!
+#Mensaje de prueba
+#Presiona Enter después de cada mensaje.
+
+#4 Leer mensajes con un Consumer
+# Desde otra terminal en VS Code, conéctate nuevamente al contenedor:
+#docker exec -it kafka-1 bash
+# Ejecuta el siguiente comando para leer los mensajes enviados:
+#kafka-console-consumer --topic test-topic --bootstrap-server kafka-1:9092 --from-beginning
+# Deberías ver los mensajes enviados desde el Producer.
+
+######################### HACER PRUEBAS DE FALLOS DESDE KAFKA #######################################
+
+#Prueba de fallos
+# Para probar la tolerancia a fallos, apaga un broker y verifica que los mensajes siguen disponibles:
+#docker stop kafka-1
+# Luego, intenta consumir mensajes desde otro broker:
+#docker exec -it kafka-2 bash
+#kafka-console-consumer --topic test-topic --bootstrap-server kafka-2:9092 --from-beginning
+#kafka-console-consumer --topic test-topic --bootstrap-server kafka-3:9092 --from-beginning
+# Si todo está bien, Kafka reasignará el líder a otro broker y seguirá funcionando. 
+
+
+########################## EXPLICACIÓN COMO FUNCIONA REPLICACIÓN EN KAFKA #############################
+
+#     Cómo funciona la replicación en Kafka
+#Cada tópico en Kafka tiene múltiples particiones.
+
+#Cada mensaje que envíes se almacena en una partición específica.
+#Cada partición tiene un líder y seguidores en otros brokers.
+
+#Un broker actúa como líder de la partición.
+#Los otros brokers contienen copias (réplicas) de la partición.
+#El líder maneja las escrituras y los seguidores sincronizan los datos.
+
+#Cuando produces un mensaje, Kafka lo escribe en la partición líder.
+#Los otros brokers replican los mensajes desde el líder.

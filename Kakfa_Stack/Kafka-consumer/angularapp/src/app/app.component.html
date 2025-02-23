@@ -1,0 +1,72 @@
+<mat-drawer-container class="drawer-container">
+  <mat-drawer #drawer [mode]="'side'" [(opened)]="isSidenavOpen" class="drawer">
+    <div class="drawer-header">
+      <a class="title" href="/">MediPulse</a>
+      <button mat-icon-button (click)="toggleSidenav()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <mat-nav-list>
+      @if (!loginDisplay) {
+        <a mat-list-item class="conditional-item" [class.visible]="true" (click)="loginRedirect(); toggleSidenav()">
+          <mat-icon>login</mat-icon>
+          <span>Login</span>
+        </a>
+      }
+
+      @if (loginDisplay && userRole === 'doctor') {
+        <a mat-list-item class="conditional-item" [class.visible]="true" [routerLink]="['/dashboard']" (click)="toggleSidenav()">
+          <mat-icon>dashboard</mat-icon>
+          <span>Dashboard</span>
+        </a>
+        
+        <a mat-list-item [routerLink]="['/patients']" (click)="toggleSidenav()">
+          <mat-icon>people</mat-icon>
+          <span>Pacientes</span>
+        </a>
+
+        
+      }
+      <a mat-list-item [routerLink]="['/profile']" (click)="toggleSidenav()">
+        <mat-icon>person</mat-icon>
+        <span>Perfil</span>
+      </a>
+
+      <a mat-list-item [routerLink]="['/alerts']" (click)="toggleSidenav()">
+        <mat-icon>notifications</mat-icon>
+        <span>Alertas</span>
+      </a>
+
+      <a mat-list-item [routerLink]="['/settings']" (click)="toggleSidenav()">
+        <mat-icon>settings</mat-icon>
+        <span>Configuración</span>
+      </a>
+
+      @if (loginDisplay) {
+        <a mat-list-item (click)="logout(true); toggleSidenav()">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </a>
+      }
+    </mat-nav-list>
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <div class="content-header">
+      <div class="header-content">
+        <button mat-icon-button (click)="toggleSidenav()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span class="logo-text">MediPulse</span>
+      </div>
+    </div>
+
+    <div class="container">
+      <!--This is to avoid reload during acquireTokenSilent() because of hidden iframe -->
+      @if (!isIframe) {
+        <router-outlet></router-outlet>
+      }
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

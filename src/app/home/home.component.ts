@@ -10,12 +10,14 @@ import {
   InteractionStatus,
 } from '@azure/msal-browser';
 import { filter } from 'rxjs/operators';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
-    styleUrls: [],
-    imports: [CommonModule, MatButtonModule, RouterLink]
+    styleUrls: ['./home.component.scss'],
+    imports: [CommonModule, MatButtonModule, RouterLink, MatIconModule, MatCardModule]
 })
 export class HomeComponent implements OnInit {
   loginDisplay = false;
@@ -58,5 +60,10 @@ export class HomeComponent implements OnInit {
       const claims = account.idTokenClaims as any;
       this.userRole = claims.extension_roles || '';
     }
+  }
+
+  login() {
+    // Add your login logic here
+    console.log('Login clicked');
   }
 }

@@ -1,0 +1,43 @@
+<div class="profile-container">
+  <div class="profile-card">
+    <h2 class="profile-title">Profile Information</h2>
+    @if (isLoading) {
+      <div class="loading-container">
+        <div class="loading-animation">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+        <span class="loading-text">Loading profile...</span>
+      </div>
+    } @else {
+      <div class="profile-info">
+        <div class="info-item">
+          <span class="label">City</span>
+          <span class="value">{{profile?.city}}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Country</span>
+          <span class="value">{{profile?.country || 'Not specified'}}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Job Title</span>
+          <span class="value">{{profile?.jobTitle || 'Not specified'}}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">User ID</span>
+          <span class="value">{{profile?.sub || 'Not specified'}}</span>
+        </div>
+      </div>
+    }
+    <div class="button-container">
+      <button class="edit-button" routerLink="/profile/edit">Edit Profile</button>
+      <button class="api-button" (click)="llamarBackend()">Call Backend</button>
+    </div>
+  </div>
+
+  <div class="response-section" *ngIf="responseBackend">
+    <h3>Backend Response</h3>
+    <pre class="response-data">{{mostrarResponseBackend() | json}}</pre>
+  </div>
+</div>

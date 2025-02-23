@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"   # RabbitMQ default port
+      - "15672:15672" # RabbitMQ management interface
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  microservicio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8085:8085"
+    environment:
+      - spring.datasource.url=jdbc:oracle:thin:@qmx8x1i4lty0nir1_low?TNS_ADMIN=/app/wallet_hospital
+      - spring.datasource.username=ADMIN
+      - spring.datasource.password=KpHhn6cg1ZWHs6
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    restart: always

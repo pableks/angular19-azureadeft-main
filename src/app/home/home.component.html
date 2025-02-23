@@ -1,26 +1,73 @@
 @if (!loginDisplay) {
-<div>
-    <p class="welcome">Bienvenidos a este ejemplo de Angular 18 integrado con MSAL para usar Azure AD B2C</p>
-    <p>Este ejemplo demuestra cómo configurar MSAL Angular para iniciar sesión, cerrar sesión, proteger una ruta y obtener un token de acceso para un recurso protegido, como Microsoft Graph</p>
-    <p>Logeate para ver la informacion de tu perfil!.</p>
+<div class="welcome-container">
+    <div class="title-container">
+        <h1 class="title">Bienvenido a MediPulse</h1>
+        <div class="vital-sign">
+            <span>♥</span>
+        </div>
+    </div>
+    <div class="content-card glass-effect">
+        <div class="header-section">
+            <mat-icon class="health-icon pulse-animation">health_and_safety</mat-icon>
+            <h2>Tu Plataforma Médica Integral</h2>
+            <p class="subtitle">Monitoreo y gestión médica en tiempo real para una atención más eficiente</p>
+        </div>
+        <div class="features">
+            <div class="feature-item hover-effect">
+                <div class="icon-wrapper">
+                    <mat-icon>monitoring</mat-icon>
+                </div>
+                <p>Monitoreo de signos vitales en tiempo real</p>
+            </div>
+            <div class="feature-item hover-effect">
+                <div class="icon-wrapper">
+                    <mat-icon>update</mat-icon>
+                </div>
+                <p>Actualizaciones instantáneas de estado</p>
+            </div>
+            <div class="feature-item hover-effect">
+                <div class="icon-wrapper">
+                    <mat-icon>analytics</mat-icon>
+                </div>
+                <p>Análisis y tendencias de salud</p>
+            </div>
+        </div>
+    </div>
 </div>
 }
 
 @if (loginDisplay) {
-<div>
-    <p>Login correcto!</p>
-    @if (userRole === 'doctor') {
-    <p>Bienvenido Doctor!</p>
-    <button mat-raised-button color="primary" routerLink="/doctor-dashboard">
-        Ir al Panel de Doctor
-    </button>
-    }
-    @if (userRole === 'paciente') {
-    <p>Bienvenido Paciente!</p>
-    <button mat-raised-button color="primary" routerLink="/patient-dashboard">
-        Ir al Panel de Paciente
-    </button>
-    }
-    <p>Solicita la información de tu perfil haciendo clic en Perfil</p>
+<div class="dashboard-container">
+    <mat-card class="welcome-card glass-effect">
+        <mat-card-header class="modern-header">
+            <mat-icon mat-card-avatar class="pulse-animation">verified_user</mat-icon>
+            <div class="header-text">
+                <mat-card-title>¡Bienvenido a MediPulse!</mat-card-title>
+                <mat-card-subtitle>Sistema de Monitoreo en Tiempo Real</mat-card-subtitle>
+            </div>
+        </mat-card-header>
+        <mat-card-content>
+            @if (userRole === 'doctor') {
+            <div class="role-section fade-in">
+                <h2>Panel de Monitoreo Médico</h2>
+                <p>Supervise pacientes y reciba alertas en tiempo real</p>
+                <button mat-raised-button color="primary" class="action-button modern-button" routerLink="/doctor-dashboard">
+                    <mat-icon>monitor_heart</mat-icon>
+                    <span>Acceder al Panel de Monitoreo</span>
+                </button>
+            </div>
+            }
+            @if (userRole === 'paciente') {
+            <div class="role-section fade-in">
+                <h2>Portal de Seguimiento</h2>
+                <p>Visualice sus datos de salud en tiempo real</p>
+                <button mat-raised-button color="primary" class="action-button modern-button" routerLink="/patient-dashboard">
+                    <mat-icon>timeline</mat-icon>
+                    <span>Ver Mi Monitoreo</span>
+                </button>
+            </div>
+            }
+        </mat-card-content>
+    </mat-card>
 </div>
 }
